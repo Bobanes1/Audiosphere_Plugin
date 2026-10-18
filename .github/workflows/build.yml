@@ -1,0 +1,157 @@
+name: Build
+
+on:
+  push:
+    branches: [ "**" ]
+    tags: [ "v*" ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows
+            os: windows-latest
+            cmake_args: ""
+            targets: Audiosphere_VST3 Audiosphere_Standalone
+          - name: macOS
+            os: macos-14
+            cmake_args: -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+            targets: Audiosphere_VST3 Audiosphere_AU Audiosphere_Standalone
+          - name: Linux
+            os: ubuntu-22.04
+            cmake_args: -DAUDIOSPHERE_BUILD_RENDER_TOOL=ON
+            targets: Audiosphere_VST3 Audiosphere_Standalone AudiosphereRender
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version
+        id: version
+        shell: bash
+        run: echo "version=$(sed -n 's/^project(Audiosphere VERSION \([0-9.]*\).*/\1/p' CMakeLists.txt)" >> "$GITHUB_OUTPUT"
+
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libasound2-dev libx11-dev libxrandr-dev libxinerama-dev \
+            libxcursor-dev libxcomposite-dev libfreetype6-dev libfontconfig1-dev libgl1-mesa-dev \
+            libcurl4-openssl-dev xvfb
+
+      - name: Configure
+        shell: bash
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release ${{ matrix.cmake_args }}
+
+      - name: Build
+        shell: bash
+        run: cmake --build build --config Release --parallel 4 --target ${{ matrix.targets }}
+
+      - name: Render and check every factory preset
+        if: runner.os == 'Linux'
+        run: ./build/AudiosphereRender_artefacts/Release/AudiosphereRender
+
+      - name: Validate VST3 with pluginval
+        if: runner.os == 'Linux'
+        run: |
+          curl -sSL -o pluginval.zip https://github.com/Tracktion/pluginval/releases/download/v1.0.4/pluginval_Linux.zip
+          unzip -q pluginval.zip
+          xvfb-run -a ./pluginval --strictness-level 5 --validate-in-process \
+            --validate build/Audiosphere_artefacts/Release/VST3/Audiosphere.vst3
+
+      # ---- Installers ---------------------------------------------------------
+      - name: Build Windows installer
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress; }
+          $ver = "${{ steps.version.outputs.version }}"
+          $art = "$pwd\build\Audiosphere_artefacts\Release"
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          & $iscc /Qp "/DAppVersion=$ver" "/DBuildDir=$art" "/DRepoDir=$pwd" "/O$pwd\dist" packaging\windows\Audiosphere.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Build macOS installer
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p dist
+          packaging/macos/build-pkg.sh "${{ steps.version.outputs.version }}" build/Audiosphere_artefacts/Release \
+            "dist/Audiosphere-${{ steps.version.outputs.version }}-macOS.pkg"
+          pkgutil --payload-files "dist/Audiosphere-${{ steps.version.outputs.version }}-macOS.pkg" | head -20
+
+      - name: Build Linux package
+        if: runner.os == 'Linux'
+        run: |
+          NAME="Audiosphere-${{ steps.version.outputs.version }}-Linux"
+          ART=build/Audiosphere_artefacts/Release
+          mkdir -p "pkg/$NAME" dist
+          cp -R "$ART/VST3/Audiosphere.vst3" "$ART/Standalone/Audiosphere" "pkg/$NAME/"
+          cp packaging/linux/install.sh README.md LICENSE "pkg/$NAME/"
+          cp Resources/icon.png "pkg/$NAME/audiosphere.png"
+          tar -C pkg -czf "dist/$NAME.tar.gz" "$NAME"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Audiosphere-${{ matrix.name }}
+          path: dist/*
+          if-no-files-found: error
+
+  # Publishes the Windows and Linux installers, either for a pushed v* tag or
+  # for a pushed commit whose message contains "[release vX.Y]" (the tag is
+  # then created by GitHub). Runs even if the macOS build fails, so a macOS
+  # packaging problem never blocks a release.
+  release:
+    name: Publish release
+    needs: build
+    if: >-
+      always() && (startsWith(github.ref, 'refs/tags/v') ||
+      (github.event_name == 'push' && contains(github.event.head_commit.message, '[release v')))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Determine release tag
+        id: tag
+        env:
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          if [ "$REF_TYPE" = "tag" ]; then
+            TAG="$REF_NAME"
+          else
+            TAG=$(printf '%s' "$COMMIT_MESSAGE" | grep -oE '\[release v[0-9][0-9.]*\]' | head -1 | sed -E 's/\[release (v[0-9.]+)\]/\1/')
+          fi
+          if [ -z "$TAG" ]; then echo "No release tag found"; exit 1; fi
+          echo "Release tag: $TAG"
+          echo "name=$TAG" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: Audiosphere-{Windows,Linux}
+          path: dist
+          merge-multiple: true
+
+      - name: Check installers and write checksums
+        run: |
+          ls -la dist
+          ls dist/*-Windows-Setup.exe dist/*-Linux.tar.gz
+          cd dist && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.name }}
+          target_commitish: ${{ github.sha }}
+          name: Audiosphere ${{ steps.tag.outputs.name }}
+          body_path: RELEASE_NOTES.md
+          files: dist/*
+          make_latest: true
