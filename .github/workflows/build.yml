@@ -104,21 +104,27 @@ jobs:
           path: dist/*
           if-no-files-found: error
 
+  # Publishes the Windows and Linux installers. Runs even if the macOS build
+  # fails, so a macOS packaging problem never blocks a release.
   release:
     name: Publish release
     needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: always() && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/download-artifact@v4
         with:
+          pattern: Audiosphere-{Windows,Linux}
           path: dist
           merge-multiple: true
 
-      - name: Checksums
-        run: cd dist && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt
+      - name: Check installers and write checksums
+        run: |
+          ls -la dist
+          ls dist/*-Windows-Setup.exe dist/*-Linux.tar.gz
+          cd dist && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt
 
       - uses: softprops/action-gh-release@v2
         with:

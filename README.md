@@ -30,7 +30,7 @@ Get the installer for your system from the
 | System | File | What it installs |
 | --- | --- | --- |
 | Windows 10/11 (64-bit) | `Audiosphere-<version>-Windows-Setup.exe` | VST3 → `C:\Program Files\Common Files\VST3`, standalone app + Start menu entry |
-| macOS 10.13+ (Apple Silicon & Intel) | `Audiosphere-<version>-macOS.pkg` | VST3 + Audio Unit → `/Library/Audio/Plug-Ins`, standalone app → `/Applications` |
+| macOS 10.13+ (Apple Silicon & Intel) | `Audiosphere-<version>-macOS.pkg` (not in v0.1 yet; get it from the Actions artifacts) | VST3 + Audio Unit → `/Library/Audio/Plug-Ins`, standalone app → `/Applications` |
 | Linux (x86-64) | `Audiosphere-<version>-Linux.tar.gz` | `./install.sh` → `~/.vst3` and `~/.local/bin` |
 
 Run the installer and follow the steps; it puts everything in the standard plug-in folders, so there is
