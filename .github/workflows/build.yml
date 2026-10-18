@@ -34,6 +34,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Read version
+        id: version
+        shell: bash
+        run: echo "version=$(sed -n 's/^project(Audiosphere VERSION \([0-9.]*\).*/\1/p' CMakeLists.txt)" >> "$GITHUB_OUTPUT"
+
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
         run: |
@@ -61,34 +66,62 @@ jobs:
           xvfb-run -a ./pluginval --strictness-level 5 --validate-in-process \
             --validate build/Audiosphere_artefacts/Release/VST3/Audiosphere.vst3
 
-      - name: Package
-        shell: bash
-        run: |
-          mkdir -p dist
-          ART=build/Audiosphere_artefacts/Release
-          cp -R "$ART/VST3/Audiosphere.vst3" dist/
-          if [ -d "$ART/AU/Audiosphere.component" ]; then cp -R "$ART/AU/Audiosphere.component" dist/; fi
-          if [ -d "$ART/Standalone/Audiosphere.app" ]; then cp -R "$ART/Standalone/Audiosphere.app" dist/; fi
-          if [ -f "$ART/Standalone/Audiosphere.exe" ]; then cp "$ART/Standalone/Audiosphere.exe" dist/; fi
-          if [ -f "$ART/Standalone/Audiosphere" ]; then cp "$ART/Standalone/Audiosphere" dist/; fi
-          cp README.md dist/
-
-      - name: Zip (Windows)
+      # ---- Installers ---------------------------------------------------------
+      - name: Build Windows installer
         if: runner.os == 'Windows'
         shell: pwsh
-        run: Compress-Archive -Path dist/* -DestinationPath Audiosphere-${{ matrix.name }}.zip
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress; }
+          $ver = "${{ steps.version.outputs.version }}"
+          $art = "$pwd\build\Audiosphere_artefacts\Release"
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          & $iscc /Qp "/DAppVersion=$ver" "/DBuildDir=$art" "/DRepoDir=$pwd" "/O$pwd\dist" packaging\windows\Audiosphere.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-      - name: Zip (macOS / Linux)
-        if: runner.os != 'Windows'
-        run: cd dist && zip -qry ../Audiosphere-${{ matrix.name }}.zip .
+      - name: Build macOS installer
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p dist
+          packaging/macos/build-pkg.sh "${{ steps.version.outputs.version }}" build/Audiosphere_artefacts/Release \
+            "dist/Audiosphere-${{ steps.version.outputs.version }}-macOS.pkg"
+          pkgutil --payload-files "dist/Audiosphere-${{ steps.version.outputs.version }}-macOS.pkg" | head -20
+
+      - name: Build Linux package
+        if: runner.os == 'Linux'
+        run: |
+          NAME="Audiosphere-${{ steps.version.outputs.version }}-Linux"
+          ART=build/Audiosphere_artefacts/Release
+          mkdir -p "pkg/$NAME" dist
+          cp -R "$ART/VST3/Audiosphere.vst3" "$ART/Standalone/Audiosphere" "pkg/$NAME/"
+          cp packaging/linux/install.sh README.md LICENSE "pkg/$NAME/"
+          cp Resources/icon.png "pkg/$NAME/audiosphere.png"
+          tar -C pkg -czf "dist/$NAME.tar.gz" "$NAME"
 
       - uses: actions/upload-artifact@v4
         with:
           name: Audiosphere-${{ matrix.name }}
-          path: Audiosphere-${{ matrix.name }}.zip
+          path: dist/*
+          if-no-files-found: error
 
-      - name: Attach to release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
+  release:
+    name: Publish release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
         with:
-          files: Audiosphere-${{ matrix.name }}.zip
+          path: dist
+          merge-multiple: true
+
+      - name: Checksums
+        run: cd dist && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: Audiosphere ${{ github.ref_name }}
+          body_path: RELEASE_NOTES.md
+          files: dist/*

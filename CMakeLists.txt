@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(Audiosphere VERSION 1.0.0 LANGUAGES C CXX)
+project(Audiosphere VERSION 0.1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -44,6 +44,7 @@ juce_add_plugin(Audiosphere
     PLUGIN_MANUFACTURER_CODE Adsp
     PLUGIN_CODE Asph
     PRODUCT_NAME "Audiosphere"
+    ICON_BIG "${CMAKE_CURRENT_SOURCE_DIR}/Resources/icon.png"
     DESCRIPTION "Wavetable synthesizer for hip hop production"
     IS_SYNTH TRUE
     NEEDS_MIDI_INPUT TRUE

@@ -22,32 +22,35 @@ Works in **Ableton Live 12** (and any other VST3/AU host) on Windows and macOS.
 - Preset browser with categories, user presets (saved to `Documents/Audiosphere/Presets`), resizable UI,
   on-screen keyboard and oscilloscope
 
-## Download
+## Download & install
 
-Pre-built plugins are produced by GitHub Actions on every push:
+Get the installer for your system from the
+[**Releases page**](https://github.com/Bobanes1/Audiosphere_Plugin/releases/latest):
 
-1. Open the **Actions** tab of this repository and pick the latest successful **Build** run.
-2. Download `Audiosphere-Windows` or `Audiosphere-macOS` from the **Artifacts** section.
+| System | File | What it installs |
+| --- | --- | --- |
+| Windows 10/11 (64-bit) | `Audiosphere-<version>-Windows-Setup.exe` | VST3 → `C:\Program Files\Common Files\VST3`, standalone app + Start menu entry |
+| macOS 10.13+ (Apple Silicon & Intel) | `Audiosphere-<version>-macOS.pkg` | VST3 + Audio Unit → `/Library/Audio/Plug-Ins`, standalone app → `/Applications` |
+| Linux (x86-64) | `Audiosphere-<version>-Linux.tar.gz` | `./install.sh` → `~/.vst3` and `~/.local/bin` |
 
-Tagging a commit `v*` (for example `v1.0.0`) also attaches the zips to a GitHub Release.
+Run the installer and follow the steps; it puts everything in the standard plug-in folders, so there is
+nothing to copy by hand. Uninstall from **Settings → Apps** on Windows, or run `./install.sh --uninstall` on Linux.
 
-## Install in Ableton Live 12
+### Load it in Ableton Live 12
+1. Open **Options → Preferences → Plug-Ins** (Windows) or **Live → Settings → Plug-Ins** (macOS).
+2. Turn on **Use VST3 Plug-In System Folders** (on macOS you can also use **Use Audio Units v2**).
+3. Click **Rescan**, then drag **Plug-Ins → VST3 → Audiosphere** onto a MIDI track.
 
-### Windows
-1. Unzip and copy `Audiosphere.vst3` to `C:\Program Files\Common Files\VST3\`.
-2. In Live: **Options > Preferences > Plug-Ins**, turn on **Use VST3 Plug-In System Folders**, then **Rescan**.
-3. Find **Audiosphere** under **Plug-Ins > VST3 > Audiosphere** in the browser and drag it onto a MIDI track.
+### First launch of an unsigned installer
+The installers are not code-signed yet, so the operating system asks for confirmation once:
+- **Windows SmartScreen** ("Windows protected your PC"): click **More info → Run anyway**.
+- **macOS** ("unidentified developer"): right-click the `.pkg` → **Open**, or click **Open Anyway** in
+  **System Settings → Privacy & Security**.
 
-### macOS
-1. Unzip and copy `Audiosphere.vst3` to `~/Library/Audio/Plug-Ins/VST3/`
-   (and optionally `Audiosphere.component` to `~/Library/Audio/Plug-Ins/Components/`).
-2. The build is not notarized, so clear the download quarantine once in Terminal:
-   ```
-   xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/VST3/Audiosphere.vst3
-   xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/Components/Audiosphere.component
-   ```
-3. In Live: **Settings > Plug-Ins**, enable **Use VST3 Plug-In System Folders** (and **Use Audio Units v2**
-   for the AU), then **Rescan**.
+### Development builds
+Every push also builds the installers in GitHub Actions: open the **Actions** tab, pick the latest
+**Build** run and download them from **Artifacts**. Pushing a tag starting with `v` (for example `v0.2`)
+publishes a GitHub Release with all installers attached.
 
 ## Factory presets
 

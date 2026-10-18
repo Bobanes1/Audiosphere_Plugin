@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2">
+    <title>Audiosphere @VERSION@</title>
+    <organization>com.audiosphere</organization>
+    <background file="background.png" mime-type="image/png" alignment="bottomleft" scaling="none"/>
+    <background-darkAqua file="background.png" mime-type="image/png" alignment="bottomleft" scaling="none"/>
+    <welcome file="welcome.html" mime-type="text/html"/>
+    <license file="LICENSE.txt" mime-type="text/plain"/>
+    <conclusion file="conclusion.html" mime-type="text/html"/>
+
+    <options customize="allow" require-scripts="false" rootVolumeOnly="true" hostArchitectures="arm64,x86_64"/>
+    <domains enable_anywhere="false" enable_currentUserHome="false" enable_localSystem="true"/>
+    <os-version min="10.13"/>
+
+    <choices-outline>
+        <line choice="vst3"/>
+        <line choice="au"/>
+        <line choice="app"/>
+    </choices-outline>
+
+    <choice id="vst3" title="VST3 Plug-in"
+            description="For Ableton Live, Bitwig, Cubase, FL Studio, Reaper and other VST3 hosts. Installed to /Library/Audio/Plug-Ins/VST3.">
+        <pkg-ref id="com.audiosphere.synth.vst3"/>
+    </choice>
+    <choice id="au" title="Audio Unit Plug-in"
+            description="For Logic Pro, GarageBand and Ableton Live (Audio Units). Installed to /Library/Audio/Plug-Ins/Components.">
+        <pkg-ref id="com.audiosphere.synth.au"/>
+    </choice>
+    <choice id="app" title="Standalone App"
+            description="Play Audiosphere without a DAW. Installed to /Applications.">
+        <pkg-ref id="com.audiosphere.synth.app"/>
+    </choice>
+
+    <pkg-ref id="com.audiosphere.synth.vst3" version="@VERSION@" onConclusion="none">Audiosphere-vst3.pkg</pkg-ref>
+    <pkg-ref id="com.audiosphere.synth.au" version="@VERSION@" onConclusion="none">Audiosphere-au.pkg</pkg-ref>
+    <pkg-ref id="com.audiosphere.synth.app" version="@VERSION@" onConclusion="none">Audiosphere-app.pkg</pkg-ref>
+</installer-gui-script>
