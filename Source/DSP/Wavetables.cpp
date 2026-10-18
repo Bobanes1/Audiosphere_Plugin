@@ -27,7 +27,7 @@ void fft (Spectrum& x, bool inverse)
             j ^= bit;
         j ^= bit;
         if (i < j)
-            std::swap (x[(size_t) i], x[(size_t) j]);
+            std::swap (x[(std::size_t) i], x[(std::size_t) j]);
     }
 
     for (int len = 2; len <= n; len <<= 1)
@@ -40,10 +40,10 @@ void fft (Spectrum& x, bool inverse)
             Complex w (1.0, 0.0);
             for (int k = 0; k < len / 2; ++k)
             {
-                auto u = x[(size_t) (i + k)];
-                auto v = x[(size_t) (i + k + len / 2)] * w;
-                x[(size_t) (i + k)] = u + v;
-                x[(size_t) (i + k + len / 2)] = u - v;
+                auto u = x[(std::size_t) (i + k)];
+                auto v = x[(std::size_t) (i + k + len / 2)] * w;
+                x[(std::size_t) (i + k)] = u + v;
+                x[(std::size_t) (i + k + len / 2)] = u - v;
                 w *= wlen;
             }
         }
@@ -60,19 +60,19 @@ struct FrameSource
 
 Spectrum toSpectrum (const FrameSource& src)
 {
-    Spectrum spec ((size_t) N, Complex());
+    Spectrum spec ((std::size_t) N, Complex());
 
     if (src.timeDomain)
     {
         for (int i = 0; i < N; ++i)
-            spec[(size_t) i] = Complex (src.timeDomain ((double) i / N), 0.0);
+            spec[(std::size_t) i] = Complex (src.timeDomain ((double) i / N), 0.0);
 
         fft (spec, false);
     }
     else
     {
         // x[n] = a * sin(2 pi k n / N)  <=>  X[k] = -i * a * N / 2, X[N-k] = conj
-        for (size_t k = 1; k < src.harmonics.size() && k < (size_t) N / 2; ++k)
+        for (std::size_t k = 1; k < src.harmonics.size() && k < (std::size_t) N / 2; ++k)
         {
             const double a = src.harmonics[k];
             spec[k]     = Complex (0.0, -a * N * 0.5);
@@ -86,18 +86,18 @@ Spectrum toSpectrum (const FrameSource& src)
 
 void renderLevel (const Spectrum& full, int maxHarm, double scale, float* out)
 {
-    Spectrum spec ((size_t) N, Complex());
+    Spectrum spec ((std::size_t) N, Complex());
 
     for (int k = 1; k <= maxHarm && k < N / 2; ++k)
     {
-        spec[(size_t) k]     = full[(size_t) k];
-        spec[(size_t) (N - k)] = full[(size_t) (N - k)];
+        spec[(std::size_t) k]     = full[(std::size_t) k];
+        spec[(std::size_t) (N - k)] = full[(std::size_t) (N - k)];
     }
 
     fft (spec, true);
 
     for (int i = 0; i < N; ++i)
-        out[i] = (float) (spec[(size_t) i].real() * scale);
+        out[i] = (float) (spec[(std::size_t) i].real() * scale);
 
     out[N] = out[0];
 }
@@ -124,11 +124,11 @@ std::vector<double> lerpSpectra (const std::vector<std::vector<double>>& keys, d
     const int i0 = std::min ((int) pos, (int) keys.size() - 2);
     const double f = pos - i0;
 
-    const auto& a = keys[(size_t) i0];
-    const auto& b = keys[(size_t) i0 + 1];
+    const auto& a = keys[(std::size_t) i0];
+    const auto& b = keys[(std::size_t) i0 + 1];
     std::vector<double> out (std::max (a.size(), b.size()), 0.0);
 
-    for (size_t k = 0; k < out.size(); ++k)
+    for (std::size_t k = 0; k < out.size(); ++k)
         out[k] = lerp (k < a.size() ? a[k] : 0.0, k < b.size() ? b[k] : 0.0, f);
 
     return out;
@@ -139,7 +139,7 @@ std::vector<double> formantSpectrum (double f0, const double (&freqs)[3], const 
                                      const double (&widths)[3], double slope, double breath)
 {
     std::vector<double> h (160, 0.0);
-    for (size_t k = 1; k < h.size(); ++k)
+    for (std::size_t k = 1; k < h.size(); ++k)
     {
         const double f = f0 * (double) k;
         double env = 0.02;
@@ -174,7 +174,7 @@ FrameSource makeFrame (int table, double t)
         {
             src.harmonics.assign (WavetableBank::maxHarmonics, 0.0);
             const double kc = std::pow (2.0, 1.0 + t * 9.0);
-            for (size_t k = 1; k < src.harmonics.size(); ++k)
+            for (std::size_t k = 1; k < src.harmonics.size(); ++k)
             {
                 const double r = (double) k / kc;
                 src.harmonics[k] = (1.0 / (double) k) / std::sqrt (1.0 + r * r * r * r);
@@ -193,7 +193,7 @@ FrameSource makeFrame (int table, double t)
         {
             src.harmonics.assign (64, 0.0);
             const double count = 1.0 + t * 40.0;
-            for (size_t k = 1; k < src.harmonics.size(); ++k)
+            for (std::size_t k = 1; k < src.harmonics.size(); ++k)
                 src.harmonics[k] = std::clamp (count - (double) k + 1.0, 0.0, 1.0) / std::pow ((double) k, 0.8);
             break;
         }
@@ -215,7 +215,7 @@ FrameSource makeFrame (int table, double t)
                 std::vector<double> h (17, 0.0);
                 for (int d = 0; d < 9; ++d)
                     if (reg[d] > 0)
-                        h[(size_t) harmonicOf[d]] += std::pow (10.0, -(8 - reg[d]) * 3.0 / 20.0);
+                        h[(std::size_t) harmonicOf[d]] += std::pow (10.0, -(8 - reg[d]) * 3.0 / 20.0);
                 keys.push_back (h);
             }
             src.harmonics = lerpSpectra (keys, t);
@@ -282,7 +282,7 @@ FrameSource makeFrame (int table, double t)
         {
             src.harmonics.assign (WavetableBank::maxHarmonics, 0.0);
             const double slope = lerp (2.0, 0.6, t);
-            for (size_t k = 1; k < src.harmonics.size(); k += 2)
+            for (std::size_t k = 1; k < src.harmonics.size(); k += 2)
                 src.harmonics[k] = 1.0 / std::pow ((double) k, slope);
             break;
         }
@@ -323,7 +323,7 @@ FrameSource makeFrame (int table, double t)
             src.harmonics[1] = 1.0;
             const double amount = 0.2 + 1.8 * t;
             for (auto& [k, a] : partials)
-                src.harmonics[(size_t) k] = a * amount;
+                src.harmonics[(std::size_t) k] = a * amount;
             break;
         }
 
@@ -332,7 +332,7 @@ FrameSource makeFrame (int table, double t)
             src.harmonics.assign (200, 0.0);
             const double kc = lerp (6.0, 60.0, t);
             const double f0 = 220.0;
-            for (size_t k = 1; k < src.harmonics.size(); ++k)
+            for (std::size_t k = 1; k < src.harmonics.size(); ++k)
             {
                 const double f = f0 * (double) k;
                 const double body = 1.0 + 0.9 * gauss (f, 280.0, 80.0) + 0.7 * gauss (f, 460.0, 120.0)
@@ -374,7 +374,7 @@ FrameSource makeFrame (int table, double t)
                 std::mt19937 rng ((unsigned) (1234 + key * 77));
                 std::uniform_real_distribution<double> dist (0.0, 1.0);
                 std::vector<double> h (96, 0.0);
-                for (size_t k = 1; k < h.size(); ++k)
+                for (std::size_t k = 1; k < h.size(); ++k)
                     h[k] = (k == 1 ? 1.0 : std::pow (dist (rng), 3.0)) / std::pow ((double) k, 0.7);
                 keys.push_back (h);
             }
@@ -396,7 +396,7 @@ const WavetableBank& WavetableBank::get()
 WavetableBank::WavetableBank()
 {
     numTables = WT::NumTables;
-    data.assign ((size_t) numTables * numLevels * numFrames * frameStride, 0.0f);
+    data.assign ((std::size_t) numTables * numLevels * numFrames * frameStride, 0.0f);
 
     for (int table = 0; table < numTables; ++table)
     {

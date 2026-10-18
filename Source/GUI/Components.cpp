@@ -451,8 +451,15 @@ void PresetBar::timerCallback()
                            juce::dontSendNotification);
 }
 
+namespace PresetMenuIds
+{
+    enum { initItem = 100000, saveItem, deleteItem, folderItem, refreshItem };
+}
+
 void PresetBar::showMenu()
 {
+    using namespace PresetMenuIds;
+
     const auto& entries = presets.getEntries();
     const int current = presets.getCurrentIndex();
 
@@ -472,14 +479,13 @@ void PresetBar::showMenu()
         menu.addSubMenu (category, byCategory[category], true, nullptr,
                          juce::isPositiveAndBelow (current, (int) entries.size()) && entries[(size_t) current].category == category);
 
-    constexpr int initId = 100000, saveId = 100001, deleteId = 100002, folderId = 100003, refreshId = 100004;
     menu.addSeparator();
-    menu.addItem (initId, "Init Patch");
-    menu.addItem (saveId, "Save Preset...");
+    menu.addItem (initItem, "Init Patch");
+    menu.addItem (saveItem, "Save Preset...");
     const bool isUser = juce::isPositiveAndBelow (current, (int) entries.size()) && entries[(size_t) current].factoryIndex < 0;
-    menu.addItem (deleteId, "Delete User Preset", isUser);
-    menu.addItem (folderId, "Show User Preset Folder");
-    menu.addItem (refreshId, "Rescan User Presets");
+    menu.addItem (deleteItem, "Delete User Preset", isUser);
+    menu.addItem (folderItem, "Show User Preset Folder");
+    menu.addItem (refreshItem, "Rescan User Presets");
 
     menu.showMenuAsync (juce::PopupMenu::Options().withTargetComponent (&nameButton).withMinimumWidth (nameButton.getWidth()),
                         [safe = juce::Component::SafePointer<PresetBar> (this), current] (int result)
@@ -488,11 +494,11 @@ void PresetBar::showMenu()
                                 return;
 
                             auto& pm = safe->presets;
-                            if (result == initId)         pm.loadInit();
-                            else if (result == saveId)    safe->showSaveDialog();
-                            else if (result == deleteId)  pm.deleteUserPreset (current);
-                            else if (result == refreshId) pm.refresh();
-                            else if (result == folderId)
+                            if (result == initItem)         pm.loadInit();
+                            else if (result == saveItem)    safe->showSaveDialog();
+                            else if (result == deleteItem)  pm.deleteUserPreset (current);
+                            else if (result == refreshItem) pm.refresh();
+                            else if (result == folderItem)
                             {
                                 auto folder = PresetManager::getUserPresetFolder();
                                 folder.createDirectory();

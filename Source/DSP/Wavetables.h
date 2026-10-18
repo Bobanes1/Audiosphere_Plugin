@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <vector>
 
 // A bank of procedurally generated, band-limited wavetables.
@@ -24,7 +25,7 @@ public:
     // Returns tableSize + 1 samples (the last one equals the first).
     const float* getFrame (int table, int level, int frame) const noexcept
     {
-        return data.data() + ((size_t) ((table * numLevels + level) * numFrames + frame)) * frameStride;
+        return data.data() + ((std::size_t) ((table * numLevels + level) * numFrames + frame)) * frameStride;
     }
 
     // Picks the mip level for an oscillator advancing `phaseIncrement` cycles per sample.
