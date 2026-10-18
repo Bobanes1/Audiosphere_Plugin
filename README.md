@@ -49,8 +49,9 @@ The installers are not code-signed yet, so the operating system asks for confirm
 
 ### Development builds
 Every push also builds the installers in GitHub Actions: open the **Actions** tab, pick the latest
-**Build** run and download them from **Artifacts**. Pushing a tag starting with `v` (for example `v0.2`)
-publishes a GitHub Release with all installers attached.
+**Build** run and download them from **Artifacts**. To publish a GitHub Release with the Windows and Linux
+installers, either push a tag starting with `v` (for example `v0.2`) or push a commit whose message contains
+`[release v0.2]`; the release job then creates the tag itself.
 
 ## Factory presets
 
