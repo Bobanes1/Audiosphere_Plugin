@@ -962,6 +962,645 @@ std::vector<FactoryPreset> buildPresets()
             .reverb (0.8f, 0.5f, 0.3f)
             .poly (8).vel (0.4f).vol (3.2f));
 
+    // =====================================================================
+    // EXPANSION 0.2 — 808 & BASS
+    // =====================================================================
+    add (base808 ("808 Rage Clipper", 1.0f, 0.75f, 0.08f, 0.3f)
+            .osc (B, WT::BasicShapes, 0.67f, 0.15f)
+            .dist (DistType::Hard, 0.7f, 0.5f).eq (2.0f, 0.0f, -2.0f).vol (-5.9f));
+
+    add (base808 ("808 Ghost Slide", 2.0f, 0.5f, 0.22f, 0.15f)
+            .dist (DistType::Soft, 0.25f, 0.6f).vol (-5.5f));
+
+    add (base808 ("808 Knock", 0.45f, 0.0f, 0.0f, 0.55f)
+            .set ("voice_mode", (float) VoiceMode::Mono)
+            .noise (NoiseType::White, 0.0f)
+            .mod (2, ModEnv, NoiseLevel, 0.5f)
+            .dist (DistType::Soft, 0.35f, 0.7f).vol (0.4f));
+
+    add (base808 ("808 Detroit Buzz", 1.4f, 0.6f, 0.07f, 0.25f)
+            .osc (A, WT::BasicShapes, 0.9f, 0.8f)
+            .filter (FT::LP24, 1800.0f, 0.1f)
+            .dist (DistType::Rectify, 0.4f, 0.5f).vol (-0.6f));
+
+    add (base808 ("808 Memphis Dust", 2.2f, 0.0f, 0.05f, 0.3f)
+            .lofi (10.0f, 16000.0f, 0.15f, 0.25f, 0.45f)
+            .dist (DistType::Soft, 0.25f, 0.55f).vol (-4.4f));
+
+    add (base808 ("808 Tape Saturated", 1.6f, 0.6f, 0.08f, 0.22f)
+            .dist (DistType::Tube, 0.45f, 0.6f)
+            .lofi (14.0f, 30000.0f, 0.12f, 0.05f, 0.7f).vol (-6.4f));
+
+    add (base808 ("808 Jersey Bounce", 0.5f, 0.0f, 0.0f, 0.6f)
+            .set ("voice_mode", (float) VoiceMode::Mono)
+            .menv (0.0f, 0.08f, 0.0f, 0.05f)
+            .dist (DistType::Soft, 0.3f, 0.7f).vol (0.4f));
+
+    add (base808 ("UK Drill Slide", 1.3f, 0.85f, 0.2f, 0.18f)
+            .dist (DistType::Hard, 0.4f, 0.45f).vol (-5.7f));
+
+    add (base808 ("808 Stutter", 2.0f, 0.8f, 0.06f, 0.25f)
+            .lfoSync (0, LS::Square, SD::D1_16, true)
+            .mod (3, Lfo1, Amp, 0.9f)
+            .dist (DistType::Soft, 0.3f, 0.6f).vol (-3.8f));
+
+    add (P ("Growl Reese", bass)
+            .osc (A, WT::Growl, 0.4f, 0.7f).uni (A, 4, 0.3f, 0.5f)
+            .sub (SubShape::Sine, -1, 0.5f)
+            .filter (FT::LP24, 900.0f, 0.25f)
+            .amp (0.005f, 0.5f, 1.0f, 0.15f)
+            .lfo (0, LS::Sine, 0.4f, false)
+            .mod (1, Lfo1, APos, 0.3f)
+            .mod (8, Macro1, Cutoff, 0.5f)
+            .dist (DistType::Soft, 0.35f, 0.6f)
+            .mono (0.05f).vel (0.2f).vol (-6.0f));
+
+    add (P ("Plucked Synth Bass", bass)
+            .osc (A, WT::PulseWidth, 0.25f, 0.75f)
+            .osc (B, WT::BasicShapes, 0.0f, 0.4f).pitch (B, -1)
+            .filter (FT::LP24, 350.0f, 0.3f, 0.45f)
+            .fenv (0.0f, 0.18f, 0.05f, 0.1f)
+            .amp (0.001f, 0.5f, 0.3f, 0.1f)
+            .mono (0.02f, false).vel (0.5f).vol (-0.9f));
+
+    add (P ("Juicy Sine Bass", bass)
+            .osc (A, WT::BasicShapes, 0.08f, 0.85f)
+            .sub (SubShape::Sine, -1, 0.4f)
+            .filter (FT::LP12, 1200.0f, 0.1f).fdrive (0.35f)
+            .amp (0.003f, 0.4f, 0.9f, 0.12f)
+            .mono (0.04f).vel (0.3f).vol (0.9f));
+
+    add (P ("G-Funk Synth Bass", bass)
+            .osc (A, WT::AnalogSaw, 0.7f, 0.7f)
+            .osc (B, WT::PulseWidth, 0.0f, 0.45f).pitch (B, -1)
+            .filter (FT::LP24, 450.0f, 0.35f, 0.35f).fdrive (0.2f)
+            .fenv (0.0f, 0.3f, 0.25f, 0.15f)
+            .amp (0.002f, 0.6f, 0.8f, 0.12f)
+            .mono (0.06f).vel (0.45f).vol (0.9f));
+
+    // =====================================================================
+    // EXPANSION 0.2 — KEYS
+    // =====================================================================
+    add (baseEPiano ("Tine Dream", keys)
+            .uni (A, 2, 0.1f, 0.7f)
+            .chorus (0.4f, 0.5f, 0.35f)
+            .delay (SD::D1_8D, 0.25f, 0.12f)
+            .reverb (0.7f, 0.5f, 0.3f).vol (-6.7f));
+
+    add (baseEPiano ("Bright Tines", keys)
+            .osc (A, WT::EPiano, 0.15f, 0.8f)
+            .filter (FT::LP12, 9000.0f, 0.05f)
+            .eq (0.0f, 0.0f, 3.0f)
+            .reverb (0.4f, 0.5f, 0.15f).vol (-8.9f));
+
+    add (P ("Felt Keys", keys)
+            .osc (A, WT::Mallet, 0.15f, 0.75f)
+            .osc (B, WT::BasicShapes, 0.05f, 0.4f)
+            .filter (FT::LP12, 1200.0f, 0.0f, 0.3f, 0.5f).fvel (0.5f)
+            .fenv (0.0f, 0.5f, 0.1f, 0.4f)
+            .amp (0.004f, 2.2f, 0.0f, 0.5f)
+            .lofi (13.0f, 26000.0f, 0.1f, 0.15f, 0.5f)
+            .reverb (0.5f, 0.6f, 0.25f)
+            .poly (12).vel (0.7f).vol (-8.8f));
+
+    add (P ("Grand Keys", keys)
+            .osc (A, WT::AnalogSaw, 0.75f, 0.5f)
+            .osc (B, WT::Mallet, 0.6f, 0.6f).pitch (B, 0, 0, 3.0f)
+            .filter (FT::LP12, 2200.0f, 0.05f, 0.45f, 0.6f).fvel (0.5f)
+            .fenv (0.0f, 1.2f, 0.15f, 0.6f)
+            .amp (0.001f, 3.5f, 0.0f, 0.7f)
+            .reverb (0.55f, 0.5f, 0.22f)
+            .poly (16).vel (0.75f).vol (-8.2f));
+
+    add (P ("Gospel Chords", keys)
+            .osc (A, WT::Organ, 0.75f, 0.75f).uni (A, 2, 0.08f, 0.5f)
+            .filter (FT::LP12, 7000.0f, 0.0f)
+            .amp (0.006f, 0.1f, 1.0f, 0.1f)
+            .lfo (0, LS::Sine, 6.5f, false)
+            .mod (1, Lfo1, Pan, 0.2f)
+            .mod (2, Lfo1, PitchFine, 0.05f)
+            .mod (3, ModWheel, APos, 0.25f)
+            .dist (DistType::Tube, 0.25f, 0.65f)
+            .chorus (1.0f, 0.4f, 0.3f)
+            .reverb (0.55f, 0.5f, 0.2f)
+            .poly (12).vel (0.0f).vol (-7.6f));
+
+    add (baseEPiano ("Dark Trap Keys", keys)
+            .filter (FT::LP12, 1800.0f, 0.05f).fvel (0.3f)
+            .delay (SD::D1_4D, 0.3f, 0.15f)
+            .reverb (0.75f, 0.6f, 0.35f).vol (-7.6f));
+
+    add (P ("Bell Piano", keys)
+            .osc (A, WT::Mallet, 0.55f, 0.6f)
+            .osc (B, WT::Glass, 0.3f, 0.35f).pitch (B, 1)
+            .filter (FT::LP12, 5000.0f, 0.0f, 0.2f, 0.4f)
+            .fenv (0.0f, 0.8f, 0.2f, 0.5f)
+            .amp (0.001f, 2.5f, 0.0f, 0.8f)
+            .reverb (0.6f, 0.4f, 0.28f)
+            .poly (16).vel (0.65f).vol (-6.0f));
+
+    add (P ("Tremolo Wurly", keys)
+            .osc (A, WT::Hollow, 0.3f, 0.7f)
+            .osc (B, WT::BasicShapes, 0.05f, 0.45f)
+            .filter (FT::LP12, 2800.0f, 0.05f).fvel (0.5f)
+            .amp (0.002f, 2.5f, 0.15f, 0.35f)
+            .lfo (0, LS::Triangle, 6.0f, false)
+            .mod (1, Lfo1, Amp, 0.35f)
+            .mod (2, Velocity, APos, 0.3f)
+            .dist (DistType::Tube, 0.2f, 0.65f)
+            .reverb (0.4f, 0.5f, 0.15f)
+            .poly (12).vel (0.7f).vol (-9.8f));
+
+    // =====================================================================
+    // EXPANSION 0.2 — PADS
+    // =====================================================================
+    add (P ("Analog Strings Pad", pads)
+            .osc (A, WT::AnalogSaw, 0.85f, 0.6f).uni (A, 6, 0.3f, 0.9f).freeRun (A)
+            .osc (B, WT::PulseWidth, 0.2f, 0.4f).uni (B, 3, 0.2f, 0.7f).freeRun (B)
+            .filter (FT::LP24, 2200.0f, 0.1f, 0.15f)
+            .fenv (0.8f, 2.0f, 0.7f, 2.0f)
+            .amp (0.5f, 1.0f, 1.0f, 1.5f)
+            .chorus (0.35f, 0.6f, 0.4f)
+            .reverb (0.75f, 0.5f, 0.35f)
+            .poly (12).vel (0.3f).vol (-12.0f));
+
+    add (P ("Night Drive Pad", pads)
+            .osc (A, WT::PulseWidth, 0.4f, 0.6f).uni (A, 4, 0.25f, 0.8f).freeRun (A)
+            .osc (B, WT::AnalogSaw, 0.8f, 0.45f).pitch (B, -1).freeRun (B)
+            .filter (FT::LP24, 900.0f, 0.3f)
+            .amp (0.6f, 1.0f, 1.0f, 1.8f)
+            .lfo (0, LS::Triangle, 0.12f, false)
+            .lfo (1, LS::Sine, 0.3f, false)
+            .mod (1, Lfo1, Cutoff, 0.2f)
+            .mod (2, Lfo2, APos, 0.2f)
+            .mod (8, Macro1, Cutoff, 0.5f)
+            .delay (SD::D1_4D, 0.4f, 0.2f)
+            .reverb (0.85f, 0.5f, 0.4f)
+            .poly (12).vel (0.3f).vol (-14.5f));
+
+    add (P ("Shimmer Pad", pads)
+            .osc (A, WT::Glass, 0.7f, 0.55f).uni (A, 5, 0.25f, 1.0f).freeRun (A)
+            .osc (B, WT::Additive, 0.8f, 0.35f).pitch (B, 1).uni (B, 3, 0.2f, 0.8f).freeRun (B)
+            .filter (FT::LP12, 8000.0f, 0.0f)
+            .amp (1.5f, 1.0f, 1.0f, 3.5f)
+            .lfo (0, LS::Sine, 0.1f, false)
+            .mod (1, Lfo1, APos, 0.3f)
+            .eq (-3.0f, 0.0f, 2.0f)
+            .delay (SD::D1_2, 0.5f, 0.25f)
+            .reverb (1.0f, 0.3f, 0.55f)
+            .poly (12).vel (0.2f).vol (-13.7f));
+
+    add (P ("Vocal Pad", pads)
+            .osc (A, WT::Vowels, 0.3f, 0.6f).uni (A, 5, 0.2f, 0.9f).freeRun (A)
+            .osc (B, WT::Choir, 0.6f, 0.45f).uni (B, 3, 0.2f, 0.8f).freeRun (B)
+            .filter (FT::LP12, 4000.0f, 0.05f)
+            .amp (0.8f, 1.0f, 1.0f, 2.0f)
+            .lfo (0, LS::SmoothRandom, 0.15f, false)
+            .mod (1, Lfo1, APos, 0.4f)
+            .chorus (0.35f, 0.5f, 0.3f)
+            .reverb (0.85f, 0.4f, 0.45f)
+            .poly (12).vel (0.3f).vol (-9.8f));
+
+    add (P ("Haunted Pad", pads)
+            .osc (A, WT::Digital, 0.6f, 0.55f).uni (A, 4, 0.35f, 0.9f).freeRun (A)
+            .osc (B, WT::Vowels, 0.9f, 0.45f).pitch (B, -1).freeRun (B)
+            .filter (FT::LP24, 1200.0f, 0.35f)
+            .amp (1.5f, 1.0f, 1.0f, 3.0f)
+            .lfo (0, LS::SmoothRandom, 0.2f, false)
+            .lfo (1, LS::Sine, 0.08f, false)
+            .mod (1, Lfo1, Cutoff, 0.25f)
+            .mod (2, Lfo2, PitchFine, 0.3f)
+            .lofi (12.0f, 22000.0f, 0.4f, 0.15f, 0.4f)
+            .reverb (0.95f, 0.6f, 0.5f)
+            .poly (12).vel (0.2f).vol (-12.6f));
+
+    add (P ("Warm Sub Pad", pads)
+            .osc (A, WT::BasicShapes, 0.25f, 0.6f).uni (A, 4, 0.25f, 0.8f).freeRun (A)
+            .sub (SubShape::Sine, -1, 0.5f)
+            .filter (FT::LP12, 1500.0f, 0.1f)
+            .amp (0.8f, 1.0f, 1.0f, 2.0f)
+            .chorus (0.3f, 0.5f, 0.35f)
+            .reverb (0.7f, 0.6f, 0.3f)
+            .poly (12).vel (0.3f).vol (-11.2f));
+
+    add (P ("Dreamscape", pads)
+            .osc (A, WT::Additive, 0.6f, 0.55f).uni (A, 6, 0.35f, 1.0f).freeRun (A)
+            .osc (B, WT::Glass, 0.3f, 0.35f).pitch (B, 1).freeRun (B)
+            .filter (FT::LP12, 5000.0f, 0.0f)
+            .amp (2.0f, 1.0f, 1.0f, 4.0f)
+            .lfo (0, LS::Triangle, 0.06f, false)
+            .mod (1, Lfo1, APos, 0.5f)
+            .delay (SD::D1_4D, 0.45f, 0.25f)
+            .reverb (1.0f, 0.35f, 0.55f)
+            .poly (12).vel (0.2f).vol (-10.0f));
+
+    add (P ("PWM Pad", pads)
+            .osc (A, WT::PulseWidth, 0.3f, 0.6f).uni (A, 3, 0.2f, 0.8f).freeRun (A)
+            .osc (B, WT::PulseWidth, 0.5f, 0.4f).pitch (B, -1).freeRun (B)
+            .filter (FT::LP24, 2500.0f, 0.15f)
+            .amp (0.4f, 1.0f, 1.0f, 1.2f)
+            .lfo (0, LS::Triangle, 0.3f, false)
+            .mod (1, Lfo1, APos, 0.35f)
+            .mod (2, Lfo1, BPos, -0.3f)
+            .chorus (0.4f, 0.6f, 0.4f)
+            .reverb (0.6f, 0.5f, 0.3f)
+            .poly (12).vel (0.3f).vol (-12.1f));
+
+    // =====================================================================
+    // EXPANSION 0.2 — LEADS
+    // =====================================================================
+    add (P ("Rage Lead", leads)
+            .osc (A, WT::AnalogSaw, 1.0f, 0.65f).uni (A, 8, 0.5f, 1.0f)
+            .osc (B, WT::AnalogSaw, 1.0f, 0.4f).pitch (B, 1).uni (B, 6, 0.45f, 1.0f)
+            .filter (FT::LP24, 8000.0f, 0.1f)
+            .amp (0.003f, 0.3f, 0.9f, 0.25f)
+            .mod (8, Macro1, Cutoff, -0.5f)
+            .dist (DistType::Soft, 0.45f, 0.7f)
+            .delay (SD::D1_8D, 0.3f, 0.2f)
+            .reverb (0.6f, 0.4f, 0.25f)
+            .poly (8).vel (0.2f).vol (-8.6f));
+
+    add (P ("Hyper Saw", leads)
+            .osc (A, WT::AnalogSaw, 0.9f, 0.7f).uni (A, 7, 0.4f, 0.9f)
+            .filter (FT::LP24, 6000.0f, 0.1f)
+            .amp (0.004f, 0.3f, 0.9f, 0.2f)
+            .lfo (0, LS::Sine, 5.5f, true, 0.4f)
+            .mod (1, Lfo1, PitchFine, 0.2f)
+            .dist (DistType::Hard, 0.25f, 0.7f)
+            .delay (SD::D1_16, 0.3f, 0.15f)
+            .mono (0.04f).vel (0.2f).vol (-8.9f));
+
+    add (P ("Detuned Square Lead", leads)
+            .osc (A, WT::PulseWidth, 0.0f, 0.6f).uni (A, 2, 0.2f, 0.6f)
+            .osc (B, WT::PulseWidth, 0.0f, 0.45f).pitch (B, 0, 0, -8.0f)
+            .filter (FT::LP12, 4000.0f, 0.2f)
+            .amp (0.005f, 0.3f, 0.9f, 0.2f)
+            .lfo (0, LS::Sine, 5.2f, true, 0.5f)
+            .mod (1, Lfo1, PitchFine, 0.2f)
+            .delay (SD::D1_8D, 0.3f, 0.15f)
+            .mono (0.05f).vel (0.3f).vol (-9.4f));
+
+    add (P ("Portamento Sine", leads)
+            .osc (A, WT::BasicShapes, 0.0f, 0.8f).pitch (A, 1)
+            .filter (FT::LP12, 3000.0f, 0.0f)
+            .amp (0.03f, 0.3f, 1.0f, 0.3f)
+            .lfo (0, LS::Sine, 5.0f, true, 0.4f)
+            .mod (1, Lfo1, PitchFine, 0.3f)
+            .delay (SD::D1_4, 0.3f, 0.15f)
+            .reverb (0.6f, 0.5f, 0.25f)
+            .mono (0.15f).vel (0.3f).vol (-6.3f));
+
+    add (P ("Nasal Lead", leads)
+            .osc (A, WT::Hollow, 0.8f, 0.8f)
+            .filter (FT::BP, 1400.0f, 0.5f, 0.0f, 0.5f)
+            .amp (0.01f, 0.3f, 0.9f, 0.2f)
+            .lfo (0, LS::Sine, 5.5f, true, 0.5f)
+            .mod (1, Lfo1, PitchFine, 0.2f)
+            .dist (DistType::Soft, 0.2f, 0.7f)
+            .reverb (0.5f, 0.5f, 0.2f)
+            .mono (0.05f).vel (0.3f).vol (-1.1f));
+
+    add (P ("Acid Lead", leads)
+            .osc (A, WT::BasicShapes, 0.67f, 0.8f)
+            .filter (FT::LP24, 800.0f, 0.7f, 0.45f).fdrive (0.35f)
+            .fenv (0.0f, 0.25f, 0.1f, 0.15f)
+            .amp (0.002f, 0.3f, 0.85f, 0.1f)
+            .mod (1, Velocity, Cutoff, 0.3f)
+            .mod (8, Macro1, Resonance, 0.25f)
+            .dist (DistType::Soft, 0.3f, 0.7f)
+            .delay (SD::D1_16, 0.35f, 0.2f)
+            .mono (0.08f).vol (-8.6f));
+
+    add (P ("Airy Flute Lead", leads)
+            .osc (A, WT::BasicShapes, 0.05f, 0.75f)
+            .noise (NoiseType::Pink, 0.2f)
+            .filter (FT::LP12, 3500.0f, 0.05f, 0.0f, 0.5f)
+            .amp (0.12f, 0.3f, 0.85f, 0.3f)
+            .lfo (0, LS::Sine, 5.0f, true, 0.8f)
+            .mod (1, Lfo1, PitchFine, 0.15f)
+            .reverb (0.7f, 0.4f, 0.35f)
+            .mono (0.04f).vel (0.4f).vol (-6.8f));
+
+    add (P ("Trumpet Lead", leads)
+            .osc (A, WT::AnalogSaw, 0.9f, 0.75f).uni (A, 2, 0.1f, 0.4f)
+            .filter (FT::LP24, 700.0f, 0.15f, 0.35f).fvel (0.5f)
+            .fenv (0.04f, 0.3f, 0.5f, 0.2f)
+            .menv (0.0f, 0.06f, 0.0f, 0.05f)
+            .amp (0.03f, 0.3f, 0.9f, 0.2f)
+            .lfo (0, LS::Sine, 5.3f, true, 0.5f)
+            .mod (1, ModEnv, Pitch, -0.015f)
+            .mod (2, Lfo1, PitchFine, 0.12f)
+            .reverb (0.5f, 0.5f, 0.2f)
+            .mono (0.04f).vel (0.4f).vol (-3.5f));
+
+    add (P ("Chiptune Arp Lead", leads)
+            .osc (A, WT::Chiptune, 0.9f, 0.6f)
+            .filterOff()
+            .amp (0.001f, 0.15f, 0.7f, 0.05f)
+            .lfo (0, LS::Sine, 6.0f, true, 0.3f)
+            .mod (1, Lfo1, PitchFine, 0.25f)
+            .delay (SD::D1_16, 0.3f, 0.2f)
+            .mono (0.0f, false).vel (0.2f).vol (1.2f));
+
+    // =====================================================================
+    // EXPANSION 0.2 — PLUCKS
+    // =====================================================================
+    add (P ("Rage Pluck", plucks)
+            .osc (A, WT::AnalogSaw, 1.0f, 0.65f).uni (A, 6, 0.4f, 0.9f)
+            .filter (FT::LP24, 1500.0f, 0.15f, 0.5f)
+            .fenv (0.0f, 0.18f, 0.0f, 0.15f)
+            .amp (0.001f, 0.35f, 0.0f, 0.2f)
+            .dist (DistType::Soft, 0.35f, 0.7f)
+            .delay (SD::D1_8D, 0.3f, 0.2f)
+            .reverb (0.5f, 0.5f, 0.2f)
+            .poly (12).vel (0.4f).vol (-0.4f));
+
+    add (P ("Bell Pluck", plucks)
+            .osc (A, WT::Glass, 0.5f, 0.6f)
+            .osc (B, WT::Mallet, 0.6f, 0.45f).pitch (B, 1)
+            .filter (FT::LP12, 3000.0f, 0.05f, 0.4f)
+            .fenv (0.0f, 0.3f, 0.0f, 0.3f)
+            .amp (0.001f, 1.2f, 0.0f, 0.6f)
+            .delay (SD::D1_8D, 0.3f, 0.18f)
+            .reverb (0.6f, 0.5f, 0.3f)
+            .poly (12).vel (0.5f).vol (-5.1f));
+
+    add (P ("Dark Pluck", plucks)
+            .osc (A, WT::AnalogSaw, 0.6f, 0.65f)
+            .osc (B, WT::BasicShapes, 0.9f, 0.4f).pitch (B, -1)
+            .filter (FT::LP24, 300.0f, 0.2f, 0.35f)
+            .fenv (0.0f, 0.3f, 0.0f, 0.2f)
+            .amp (0.001f, 0.8f, 0.0f, 0.3f)
+            .reverb (0.5f, 0.6f, 0.25f)
+            .poly (12).vel (0.5f).vol (-4.9f));
+
+    add (P ("Glass Pluck", plucks)
+            .osc (A, WT::Glass, 0.8f, 0.65f).uni (A, 2, 0.12f, 0.6f)
+            .filter (FT::LP12, 6000.0f, 0.0f, 0.2f)
+            .fenv (0.0f, 0.2f, 0.0f, 0.2f)
+            .amp (0.001f, 0.6f, 0.0f, 0.4f)
+            .delay (SD::D1_16, 0.35f, 0.2f)
+            .reverb (0.6f, 0.4f, 0.3f)
+            .poly (12).vel (0.5f).vol (-3.3f));
+
+    add (P ("Synth Harp", plucks)
+            .osc (A, WT::PulseWidth, 0.2f, 0.55f)
+            .osc (B, WT::AnalogSaw, 0.5f, 0.45f)
+            .filter (FT::LP12, 1500.0f, 0.05f, 0.45f, 0.6f)
+            .fenv (0.0f, 0.5f, 0.0f, 0.5f)
+            .amp (0.001f, 2.0f, 0.0f, 1.0f)
+            .chorus (0.4f, 0.4f, 0.3f)
+            .reverb (0.7f, 0.5f, 0.35f)
+            .poly (16).vel (0.6f).vol (-6.8f));
+
+    add (baseFmBell ("Steel Drum", 12, 0.0f, 0.25f, 0.2f, 0.9f).category (plucks)
+            .reverb (0.4f, 0.5f, 0.15f).vol (-5.4f));
+
+    add (P ("Pizz Short", plucks)
+            .osc (A, WT::Strings, 0.5f, 0.7f).uni (A, 3, 0.12f, 0.7f)
+            .filter (FT::LP12, 2500.0f, 0.05f, 0.4f)
+            .fenv (0.0f, 0.1f, 0.0f, 0.1f)
+            .amp (0.001f, 0.2f, 0.0f, 0.15f)
+            .reverb (0.55f, 0.5f, 0.3f)
+            .poly (16).vel (0.6f).vol (2.2f));
+
+    add (P ("Mallet Pluck", plucks)
+            .osc (A, WT::Mallet, 0.5f, 0.8f)
+            .filter (FT::LP12, 4000.0f, 0.0f).fvel (0.5f)
+            .amp (0.001f, 0.5f, 0.0f, 0.3f)
+            .delay (SD::D1_8, 0.25f, 0.15f)
+            .reverb (0.4f, 0.5f, 0.2f)
+            .poly (16).vel (0.6f).vol (-2.3f));
+
+    // =====================================================================
+    // EXPANSION 0.2 — BELLS & MALLETS
+    // =====================================================================
+    add (baseFmBell ("Crystal Bell", 24, 0.0f, 0.15f, 0.3f, 2.5f)
+            .pitch (A, 1).pitch (B, 1, 24, 0.0f)
+            .reverb (0.7f, 0.3f, 0.35f).vol (-10.2f));
+
+    add (baseFmBell ("Church Bell", 19, 40.0f, 0.35f, 0.25f, 5.0f)
+            .pitch (A, -1).pitch (B, -1, 19, 40.0f)
+            .reverb (0.9f, 0.4f, 0.4f).vol (-12.4f));
+
+    add (baseFmBell ("Tubular Bell", 27, 30.0f, 0.3f, 0.25f, 4.0f)
+            .reverb (0.7f, 0.4f, 0.3f).vol (-10.6f));
+
+    add (baseFmBell ("Gamelan", 15, 50.0f, 0.3f, 0.3f, 2.0f)
+            .delay (SD::D1_8D, 0.3f, 0.15f)
+            .reverb (0.6f, 0.4f, 0.3f).vol (-8.4f));
+
+    add (P ("Lo-Fi Glock", bells)
+            .osc (A, WT::Mallet, 0.85f, 0.75f).pitch (A, 1)
+            .filterOff()
+            .amp (0.001f, 1.2f, 0.0f, 0.7f)
+            .lofi (9.0f, 14000.0f, 0.35f, 0.3f, 0.4f)
+            .reverb (0.5f, 0.5f, 0.25f)
+            .poly (16).vel (0.5f).vol (-1.3f));
+
+    add (P ("Horror Music Box", bells)
+            .osc (A, WT::Glass, 0.15f, 0.75f).pitch (A, 1).uni (A, 2, 0.15f, 0.6f)
+            .filterOff()
+            .amp (0.001f, 1.8f, 0.0f, 1.2f)
+            .lfo (0, LS::Sine, 4.0f, false)
+            .mod (1, Lfo1, PitchFine, 0.15f)
+            .lofi (11.0f, 18000.0f, 0.6f, 0.25f, 0.45f)
+            .reverb (0.85f, 0.4f, 0.45f)
+            .poly (16).vel (0.5f).vol (-7.1f));
+
+    // =====================================================================
+    // EXPANSION 0.2 — STRINGS & BRASS
+    // =====================================================================
+    add (P ("Staccato Strings Dark", orch)
+            .osc (A, WT::Strings, 0.5f, 0.6f).uni (A, 5, 0.2f, 0.8f)
+            .osc (B, WT::Strings, 0.3f, 0.45f).pitch (B, -1).uni (B, 3, 0.2f, 0.6f)
+            .filter (FT::LP12, 2000.0f, 0.05f).fvel (0.5f)
+            .amp (0.008f, 0.25f, 0.05f, 0.15f)
+            .reverb (0.6f, 0.5f, 0.28f)
+            .poly (12).vel (0.5f).vol (-2.1f));
+
+    add (P ("Legato Violin", orch)
+            .osc (A, WT::Strings, 0.75f, 0.7f).uni (A, 2, 0.1f, 0.5f)
+            .filter (FT::LP12, 5000.0f, 0.05f)
+            .amp (0.15f, 0.5f, 0.9f, 0.4f)
+            .lfo (0, LS::Sine, 5.5f, true, 0.5f)
+            .mod (1, Lfo1, PitchFine, 0.15f)
+            .reverb (0.7f, 0.4f, 0.35f)
+            .mono (0.06f).vel (0.4f).vol (-6.4f));
+
+    add (P ("Cello Low", orch)
+            .osc (A, WT::Strings, 0.55f, 0.7f).pitch (A, -1).uni (A, 3, 0.15f, 0.6f)
+            .filter (FT::LP12, 2500.0f, 0.05f)
+            .amp (0.2f, 1.0f, 1.0f, 0.6f)
+            .lfo (0, LS::Sine, 5.0f, true, 0.6f)
+            .mod (1, Lfo1, PitchFine, 0.1f)
+            .reverb (0.7f, 0.5f, 0.3f)
+            .poly (8).vel (0.4f).vol (-12.4f));
+
+    add (P ("Brass Swell", orch)
+            .osc (A, WT::AnalogSaw, 0.95f, 0.65f).uni (A, 4, 0.18f, 0.7f)
+            .filter (FT::LP24, 400.0f, 0.1f, 0.45f)
+            .fenv (0.6f, 0.8f, 0.6f, 0.4f)
+            .amp (0.5f, 0.5f, 0.9f, 0.4f)
+            .reverb (0.6f, 0.5f, 0.25f)
+            .poly (12).vel (0.4f).vol (-10.0f));
+
+    add (P ("French Horn", orch)
+            .osc (A, WT::AnalogSaw, 0.6f, 0.6f)
+            .osc (B, WT::Hollow, 0.5f, 0.45f)
+            .filter (FT::LP24, 600.0f, 0.1f, 0.25f).fvel (0.4f)
+            .fenv (0.08f, 0.6f, 0.4f, 0.3f)
+            .amp (0.08f, 0.4f, 0.85f, 0.3f)
+            .lfo (0, LS::Sine, 5.0f, true, 0.6f)
+            .mod (1, Lfo1, PitchFine, 0.08f)
+            .reverb (0.6f, 0.5f, 0.3f)
+            .poly (12).vel (0.5f).vol (-12.8f));
+
+    add (P ("Sad Strings", orch)
+            .osc (A, WT::Strings, 0.65f, 0.6f).uni (A, 6, 0.25f, 0.9f).freeRun (A)
+            .osc (B, WT::Choir, 0.4f, 0.3f).freeRun (B)
+            .filter (FT::LP12, 2800.0f, 0.05f)
+            .amp (0.6f, 1.0f, 1.0f, 1.6f)
+            .lofi (13.0f, 24000.0f, 0.25f, 0.1f, 0.5f)
+            .reverb (0.85f, 0.45f, 0.4f)
+            .poly (12).vel (0.3f).vol (-11.5f));
+
+    // =====================================================================
+    // EXPANSION 0.2 — LO-FI
+    // =====================================================================
+    add (baseEPiano ("Dusty Rhodes", lofiC)
+            .lofi (10.0f, 16000.0f, 0.5f, 0.35f, 0.35f)
+            .chorus (0.5f, 0.4f, 0.3f)
+            .reverb (0.6f, 0.6f, 0.25f).vol (-7.4f));
+
+    add (P ("Cassette Choir", lofiC)
+            .osc (A, WT::Choir, 0.66f, 0.7f).uni (A, 4, 0.2f, 0.9f).freeRun (A)
+            .filter (FT::LP12, 3000.0f, 0.05f)
+            .amp (0.4f, 1.0f, 1.0f, 1.2f)
+            .lofi (10.0f, 15000.0f, 0.7f, 0.3f, 0.35f)
+            .reverb (0.7f, 0.5f, 0.35f)
+            .poly (12).vel (0.3f).vol (-8.6f));
+
+    add (P ("Old Radio Lead", lofiC)
+            .osc (A, WT::BasicShapes, 0.4f, 0.8f)
+            .filter (FT::BP, 1500.0f, 0.3f)
+            .amp (0.01f, 0.3f, 0.9f, 0.2f)
+            .lfo (0, LS::Sine, 5.0f, true, 0.4f)
+            .mod (1, Lfo1, PitchFine, 0.2f)
+            .lofi (8.0f, 11000.0f, 0.3f, 0.4f, 0.3f)
+            .dist (DistType::Soft, 0.3f, 0.5f)
+            .mono (0.05f).vel (0.3f).vol (-4.7f));
+
+    add (P ("Lo-Fi Bass", lofiC)
+            .osc (A, WT::BasicShapes, 0.2f, 0.85f)
+            .sub (SubShape::Sine, 0, 0.4f)
+            .filter (FT::LP12, 500.0f, 0.1f, 0.2f)
+            .fenv (0.0f, 0.3f, 0.0f, 0.2f)
+            .amp (0.003f, 1.0f, 0.3f, 0.2f)
+            .lofi (11.0f, 18000.0f, 0.2f, 0.2f, 0.4f)
+            .mono (0.0f, false).vel (0.5f).vol (-3.4f));
+
+    add (P ("Warped Pad", lofiC)
+            .osc (A, WT::AnalogSaw, 0.7f, 0.6f).uni (A, 5, 0.3f, 0.9f).freeRun (A)
+            .filter (FT::LP12, 2000.0f, 0.1f)
+            .amp (0.8f, 1.0f, 1.0f, 2.0f)
+            .lofi (11.0f, 18000.0f, 1.0f, 0.25f, 0.35f)
+            .chorus (0.3f, 0.6f, 0.4f)
+            .reverb (0.8f, 0.5f, 0.4f)
+            .poly (12).vel (0.3f).vol (-7.1f));
+
+    add (P ("Vinyl Keys", lofiC)
+            .osc (A, WT::Mallet, 0.35f, 0.7f)
+            .osc (B, WT::EPiano, 0.1f, 0.45f)
+            .filter (FT::LP12, 1500.0f, 0.05f, 0.3f, 0.5f)
+            .fenv (0.0f, 0.6f, 0.1f, 0.4f)
+            .amp (0.002f, 2.5f, 0.0f, 0.5f)
+            .lofi (10.0f, 16000.0f, 0.35f, 0.45f, 0.35f)
+            .reverb (0.55f, 0.6f, 0.25f)
+            .poly (12).vel (0.65f).vol (-8.8f));
+
+    add (P ("Jazz Hop Pluck", lofiC)
+            .osc (A, WT::BasicShapes, 0.45f, 0.75f)
+            .osc (B, WT::Mallet, 0.3f, 0.35f)
+            .filter (FT::LP12, 1300.0f, 0.1f, 0.4f, 0.6f).fvel (0.4f)
+            .fenv (0.0f, 0.25f, 0.0f, 0.25f)
+            .amp (0.001f, 1.3f, 0.0f, 0.45f)
+            .chorus (0.6f, 0.4f, 0.3f)
+            .lofi (12.0f, 20000.0f, 0.3f, 0.25f, 0.45f)
+            .reverb (0.5f, 0.6f, 0.22f)
+            .poly (12).vel (0.6f).vol (-4.7f));
+
+    // =====================================================================
+    // EXPANSION 0.2 — FX & ATMOS
+    // =====================================================================
+    add (P ("Downlifter", fx)
+            .osc (A, WT::AnalogSaw, 1.0f, 0.6f).uni (A, 7, 0.35f, 1.0f)
+            .noise (NoiseType::White, 0.3f)
+            .filter (FT::LP24, 300.0f, 0.25f)
+            .menv (0.0f, 3.0f, 0.0f, 1.0f)
+            .amp (0.01f, 3.0f, 0.0f, 0.5f)
+            .mod (1, ModEnv, Cutoff, 1.0f)
+            .mod (2, ModEnv, Pitch, 0.5f)
+            .reverb (0.8f, 0.4f, 0.35f)
+            .poly (4).vel (0.0f).vol (3.7f));
+
+    add (P ("Noise Sweep", fx)
+            .oscOff (A)
+            .noise (NoiseType::White, 0.8f)
+            .filter (FT::BP, 500.0f, 0.5f)
+            .amp (0.5f, 1.0f, 1.0f, 1.5f)
+            .lfo (0, LS::Triangle, 0.15f, true)
+            .mod (1, Lfo1, Cutoff, 0.8f)
+            .reverb (0.8f, 0.4f, 0.35f)
+            .poly (2).vel (0.0f).vol (-3.3f));
+
+    add (P ("Alien Talk", fx)
+            .osc (A, WT::Vowels, 0.5f, 0.75f)
+            .filter (FT::LP12, 4000.0f, 0.1f)
+            .amp (0.01f, 0.5f, 1.0f, 0.3f)
+            .lfo (0, LS::SampleHold, 8.0f, true)
+            .lfo (1, LS::Sine, 0.5f, true)
+            .mod (1, Lfo1, APos, 0.8f)
+            .mod (2, Lfo2, Pitch, 0.05f)
+            .delay (SD::D1_16, 0.4f, 0.2f)
+            .poly (4).vel (0.2f).vol (-5.0f));
+
+    add (P ("Glitch Zap", fx)
+            .osc (A, WT::BasicShapes, 0.9f, 0.7f)
+            .filterOff()
+            .menv (0.0f, 0.08f, 0.0f, 0.05f)
+            .amp (0.001f, 0.25f, 0.0f, 0.05f)
+            .lfoSync (0, LS::SampleHold, SD::D1_32, true)
+            .mod (1, ModEnv, Pitch, 0.8f)
+            .mod (2, Lfo1, Pitch, 0.2f)
+            .lofi (6.0f, 6000.0f, 0.0f, 0.0f, 0.7f)
+            .delay (SD::D1_16, 0.35f, 0.25f)
+            .poly (8).vel (0.3f).vol (3.1f));
+
+    add (P ("Wind", fx)
+            .oscOff (A)
+            .noise (NoiseType::Pink, 1.0f)
+            .filter (FT::BP, 900.0f, 0.55f)
+            .amp (1.5f, 1.0f, 1.0f, 2.5f)
+            .lfo (0, LS::SmoothRandom, 0.2f, false)
+            .lfo (1, LS::SmoothRandom, 0.1f, false)
+            .mod (1, Lfo1, Cutoff, 0.6f)
+            .mod (2, Lfo2, Amp, 0.4f)
+            .reverb (0.9f, 0.5f, 0.5f)
+            .poly (2).vel (0.0f).vol (4.3f));
+
+    add (P ("Impact Boom", fx)
+            .osc (A, WT::BasicShapes, 0.0f, 0.85f).pitch (A, -1)
+            .noise (NoiseType::White, 0.0f)
+            .filterOff()
+            .menv (0.0f, 0.4f, 0.0f, 0.3f)
+            .amp (0.001f, 2.5f, 0.0f, 1.5f)
+            .mod (1, ModEnv, Pitch, 0.5f)
+            .mod (2, ModEnv, NoiseLevel, 0.6f)
+            .dist (DistType::Soft, 0.4f, 0.6f)
+            .reverb (0.9f, 0.5f, 0.4f)
+            .poly (4).vel (0.0f).vol (-10.4f));
+
     return list;
 }
 }

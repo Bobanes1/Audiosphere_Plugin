@@ -598,6 +598,7 @@ AudiosphereEditor::AudiosphereEditor (AudiosphereProcessor& p)
     voiceLabel.setColour (juce::Label::textColourId, Theme::textDim);
     voiceLabel.setJustificationType (juce::Justification::centredRight);
     content.addAndMakeVisible (voiceLabel);
+    content.addAndMakeVisible (updateButton);
 
     keyboard.setAvailableRange (24, 108);
     keyboard.setLowestVisibleKey (24);
@@ -620,6 +621,7 @@ AudiosphereEditor::AudiosphereEditor (AudiosphereProcessor& p)
     setSize (baseWidth, baseHeight);
 
     startTimerHz (10);
+    updates->checkIfDue();
 }
 
 AudiosphereEditor::~AudiosphereEditor()
@@ -652,7 +654,8 @@ void AudiosphereEditor::resized()
     synthTab.setBounds (10, 72, 110, 26);
     modTab.setBounds (126, 72, 130, 26);
     fxTab.setBounds (262, 72, 110, 26);
-    voiceLabel.setBounds (baseWidth - 210, 72, 200, 26);
+    voiceLabel.setBounds (baseWidth - 110, 72, 100, 26);
+    updateButton.setBounds (baseWidth - 330, 72, 210, 26);
 
     for (auto* page : std::initializer_list<juce::Component*> { synthPage.get(), modPage.get(), fxPage.get() })
         page->setBounds (0, pageY, baseWidth, pageHeight);

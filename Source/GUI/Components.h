@@ -136,6 +136,15 @@ private:
 };
 
 //==============================================================================
+// Star toggle used to like a preset (drawn, so it does not depend on font glyphs).
+class StarButton : public juce::Button
+{
+public:
+    StarButton() : juce::Button ("Favourite") {}
+    void paintButton (juce::Graphics&, bool highlighted, bool down) override;
+};
+
+//==============================================================================
 class PresetBar : public juce::Component, private juce::Timer
 {
 public:
@@ -150,6 +159,7 @@ private:
 
     PresetManager& presets;
     juce::TextButton prevButton { "<" }, nextButton { ">" }, nameButton, saveButton { "SAVE" };
+    StarButton starButton;
     juce::Label categoryLabel;
     int lastChange = -1;
 };

@@ -397,10 +397,50 @@ void ScopeView::paint (juce::Graphics& g)
 }
 
 //==============================================================================
+void StarButton::paintButton (juce::Graphics& g, bool highlighted, bool down)
+{
+    const auto b = getLocalBounds().toFloat().reduced (0.5f);
+    g.setColour (highlighted ? Theme::panelLight.brighter (0.08f) : Theme::panelLight);
+    g.fillRoundedRectangle (b, 4.0f);
+    g.setColour (getToggleState() ? Theme::amber : Theme::outline);
+    g.drawRoundedRectangle (b, 4.0f, 1.0f);
+
+    juce::Path star;
+    const auto c = b.getCentre();
+    const float outer = std::min (b.getWidth(), b.getHeight()) * (down ? 0.3f : 0.34f), inner = outer * 0.45f;
+    for (int i = 0; i < 10; ++i)
+    {
+        const float angle = juce::MathConstants<float>::pi * (float) i / 5.0f;
+        const auto p = c.getPointOnCircumference (i % 2 == 0 ? outer : inner, angle);
+        if (i == 0) star.startNewSubPath (p); else star.lineTo (p);
+    }
+    star.closeSubPath();
+
+    if (getToggleState())
+    {
+        g.setColour (Theme::amber);
+        g.fillPath (star);
+    }
+    else
+    {
+        g.setColour (isEnabled() ? (highlighted ? Theme::text : Theme::textDim) : Theme::outline);
+        g.strokePath (star, juce::PathStrokeType (1.4f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+    }
+}
+
+//==============================================================================
 PresetBar::PresetBar (PresetManager& manager) : presets (manager)
 {
-    for (auto* b : { &prevButton, &nextButton, &nameButton, &saveButton })
+    for (auto* b : std::initializer_list<juce::Component*> { &prevButton, &nextButton, &nameButton, &saveButton, &starButton })
         addAndMakeVisible (b);
+
+    starButton.setTooltip ("Like this preset (adds it to Favourites)");
+    starButton.onClick = [this]
+    {
+        presets.toggleFavourite (presets.getCurrentIndex());
+        lastChange = -1;
+        timerCallback();
+    };
 
     prevButton.onClick = [this] { presets.loadPrevious(); };
     nextButton.onClick = [this] { presets.loadNext(); };
@@ -430,6 +470,8 @@ void PresetBar::resized()
     b.removeFromTop (2);
     saveButton.setBounds (b.removeFromRight (56));
     b.removeFromRight (6);
+    starButton.setBounds (b.removeFromRight (30));
+    b.removeFromRight (6);
     prevButton.setBounds (b.removeFromLeft (30));
     nextButton.setBounds (b.removeFromRight (30));
     nameButton.setBounds (b.reduced (4, 0));
@@ -437,6 +479,11 @@ void PresetBar::resized()
 
 void PresetBar::timerCallback()
 {
+    // Favourites can change in another plugin window, so the star is refreshed every tick.
+    const int index = presets.getCurrentIndex();
+    starButton.setEnabled (index >= 0);
+    starButton.setToggleState (index >= 0 && presets.isFavourite (index), juce::dontSendNotification);
+
     const int change = presets.getChangeCounter();
     if (change == lastChange)
         return;
@@ -444,7 +491,6 @@ void PresetBar::timerCallback()
     lastChange = change;
     nameButton.setButtonText (presets.getCurrentName());
 
-    const int index = presets.getCurrentIndex();
     const auto& entries = presets.getEntries();
     categoryLabel.setText (juce::isPositiveAndBelow (index, (int) entries.size()) ? entries[(size_t) index].category.toUpperCase()
                                                                                     : juce::String ("INIT / MODIFIED"),
@@ -467,13 +513,25 @@ void PresetBar::showMenu()
     std::map<juce::String, juce::PopupMenu> byCategory;
     juce::StringArray order;
 
+    const auto favourites = presets.getFavouriteIndices();
+    const juce::String star (juce::CharPointer_UTF8 ("\xe2\x98\x85 "));
+
     for (int i = 0; i < (int) entries.size(); ++i)
     {
         const auto& e = entries[(size_t) i];
         if (! order.contains (e.category))
             order.add (e.category);
-        byCategory[e.category].addItem (i + 1, e.name, true, i == current);
+        const bool liked = std::find (favourites.begin(), favourites.end(), i) != favourites.end();
+        byCategory[e.category].addItem (i + 1, (liked ? star : juce::String()) + e.name, true, i == current);
     }
+
+    juce::PopupMenu favouritesMenu;
+    for (int i : favourites)
+        favouritesMenu.addItem (i + 1, entries[(size_t) i].name, true, i == current);
+    if (favourites.empty())
+        favouritesMenu.addItem (-1, "Click the star next to a preset to add it here", false, false);
+    menu.addSubMenu (star + "Favourites (" + juce::String ((int) favourites.size()) + ")", favouritesMenu);
+    menu.addSeparator();
 
     for (auto& category : order)
         menu.addSubMenu (category, byCategory[category], true, nullptr,

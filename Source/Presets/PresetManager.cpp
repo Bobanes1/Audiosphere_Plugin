@@ -170,3 +170,56 @@ void PresetManager::setCurrentName (const juce::String& name)
 
     ++changeCounter;
 }
+
+//==============================================================================
+juce::String PresetManager::favouriteKey (int entryIndex) const
+{
+    if (! juce::isPositiveAndBelow (entryIndex, (int) entries.size()))
+        return {};
+
+    const auto& e = entries[(size_t) entryIndex];
+    return (e.factoryIndex >= 0 ? "factory:" : "user:") + e.name;
+}
+
+juce::StringArray PresetManager::loadFavourites() const
+{
+    if (settings == nullptr)
+        settings = std::make_unique<juce::SharedResourcePointer<AppSettings>>();
+
+    juce::StringArray list;
+    list.addLines ((*settings)->getString ("favourites"));
+    list.removeEmptyStrings();
+    return list;
+}
+
+bool PresetManager::isFavourite (int entryIndex) const
+{
+    const auto key = favouriteKey (entryIndex);
+    return key.isNotEmpty() && loadFavourites().contains (key);
+}
+
+void PresetManager::toggleFavourite (int entryIndex)
+{
+    const auto key = favouriteKey (entryIndex);
+    if (key.isEmpty())
+        return;
+
+    auto list = loadFavourites();
+    if (list.contains (key))
+        list.removeString (key);
+    else
+        list.add (key);
+
+    (*settings)->setString ("favourites", list.joinIntoString ("\n"));
+    ++changeCounter;
+}
+
+std::vector<int> PresetManager::getFavouriteIndices() const
+{
+    const auto list = loadFavourites();
+    std::vector<int> result;
+    for (int i = 0; i < (int) entries.size(); ++i)
+        if (list.contains (favouriteKey (i)))
+            result.push_back (i);
+    return result;
+}

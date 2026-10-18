@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(Audiosphere VERSION 0.1.0 LANGUAGES C CXX)
+project(Audiosphere VERSION 0.2.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -51,6 +51,7 @@ juce_add_plugin(Audiosphere
     NEEDS_MIDI_OUTPUT FALSE
     IS_MIDI_EFFECT FALSE
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE
+    NEEDS_CURL TRUE
     VST3_CATEGORIES Instrument Synth
     AU_MAIN_TYPE kAudioUnitType_MusicDevice
     COPY_PLUGIN_AFTER_BUILD ${AUDIOSPHERE_COPY_PLUGIN}
@@ -58,6 +59,7 @@ juce_add_plugin(Audiosphere
 
 set(AUDIOSPHERE_CORE_SOURCES
     Source/PluginProcessor.cpp
+    Source/AppSettings.cpp
     Source/Parameters.cpp
     Source/DSP/Wavetables.cpp
     Source/DSP/SynthEngine.cpp
@@ -69,19 +71,22 @@ target_sources(Audiosphere PRIVATE
     ${AUDIOSPHERE_CORE_SOURCES}
     Source/PluginEditor.cpp
     Source/GUI/LookAndFeel.cpp
-    Source/GUI/Components.cpp)
+    Source/GUI/Components.cpp
+    Source/GUI/UpdateUI.cpp
+    Source/Update/UpdateManager.cpp)
 
 target_include_directories(Audiosphere PRIVATE Source)
 
 target_compile_definitions(Audiosphere PUBLIC
+    AUDIOSPHERE_VERSION="${PROJECT_VERSION}"
     JUCE_WEB_BROWSER=0
-    JUCE_USE_CURL=0
     JUCE_VST3_CAN_REPLACE_VST2=0
     JUCE_DISPLAY_SPLASH_SCREEN=0)
 
 target_link_libraries(Audiosphere
     PRIVATE
         juce::juce_audio_utils
+        juce::juce_cryptography
         juce::juce_dsp
     PUBLIC
         juce::juce_recommended_config_flags

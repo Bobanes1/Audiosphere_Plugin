@@ -4,6 +4,7 @@
 #include "PluginProcessor.h"
 #include "GUI/LookAndFeel.h"
 #include "GUI/Components.h"
+#include "GUI/UpdateUI.h"
 
 class AudiosphereEditor : public juce::AudioProcessorEditor, private juce::Timer
 {
@@ -40,6 +41,8 @@ private:
 
     juce::TextButton synthTab { "SYNTH" }, modTab { "MOD MATRIX" }, fxTab { "EFFECTS" };
     juce::Label voiceLabel;
+    UpdateButton updateButton;
+    juce::SharedResourcePointer<UpdateManager> updates;
     juce::MidiKeyboardComponent keyboard;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudiosphereEditor)

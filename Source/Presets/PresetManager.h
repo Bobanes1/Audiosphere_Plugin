@@ -1,6 +1,7 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
+#include "../AppSettings.h"
 
 // Factory + user preset handling. User presets are XML files stored in
 // Documents/Audiosphere/Presets so they can be shared between projects and DAWs.
@@ -39,7 +40,15 @@ public:
     // Incremented whenever the current preset changes (lets the editor poll cheaply).
     int getChangeCounter() const noexcept { return changeCounter.load(); }
 
+    // Favourites ("likes"), shared by all instances and kept across sessions.
+    bool isFavourite (int entryIndex) const;
+    void toggleFavourite (int entryIndex);
+    std::vector<int> getFavouriteIndices() const;
+
 private:
+    juce::String favouriteKey (int entryIndex) const;
+    juce::StringArray loadFavourites() const;
+
     void applyFactory (int factoryIndex);
     void resetToDefaults();
 
@@ -48,4 +57,5 @@ private:
     int currentIndex = -1;
     juce::String currentName { "Init" };
     std::atomic<int> changeCounter { 0 };
+    mutable std::unique_ptr<juce::SharedResourcePointer<AppSettings>> settings;   // created on first use
 };

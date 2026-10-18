@@ -1,7 +1,7 @@
 # Audiosphere
 
 A wavetable synthesizer plugin (VST3 / AU / Standalone) built for hip hop production, inspired by
-the workflow of Serum and Omnisphere. It ships with **82 factory presets**: 808s, basses, keys,
+the workflow of Serum and Omnisphere. It ships with **153 factory presets**: 808s, basses, keys,
 pads, leads, plucks, bells, strings/brass, lo-fi sounds and FX.
 
 Works in **Ableton Live 12** (and any other VST3/AU host) on Windows and macOS.
@@ -19,8 +19,10 @@ Works in **Ableton Live 12** (and any other VST3/AU host) on Windows and macOS.
 - **Poly / Mono / Legato** voice modes with glide, for classic **808 slides**
 - **Effects**: distortion (5 types, 2x oversampled), lo-fi (bit crush, sample rate, wow & flutter,
   vinyl noise), 3-band EQ, chorus, tempo-synced ping-pong delay, reverb, output limiter
-- Preset browser with categories, user presets (saved to `Documents/Audiosphere/Presets`), resizable UI,
-  on-screen keyboard and oscilloscope
+- Preset browser with categories, **favourites** (click the star to like a preset), user presets (saved to
+  `Documents/Audiosphere/Presets`), resizable UI, on-screen keyboard and oscilloscope
+- **Built-in updater**: the plugin tells you when a new version is out, downloads the installer for your system,
+  verifies it against the release checksums and starts it for you
 
 ## Download & install
 
@@ -57,17 +59,30 @@ installers, either push a tag starting with `v` (for example `v0.2`) or push a c
 
 | Category | Presets |
 | --- | --- |
-| 808 & Bass | 808 Boom, 808 Hard Trap, 808 Mafia Slide, 808 Punchy Short, 808 Long Rumble, 808 Growl, 808 Distorted Square, Drill Glide 808, Pure Sub, Reese Bass, Wobble Bass, Funk Pluck Bass, Acid Line, Analog Mono Bass, Lo-Fi Upright, Boom Bap Bass |
-| Keys | Electric Tines, Soul Keys, Dreamy Keys, Dusty Piano, Gospel Organ, Wurly Grit, Funk Clav, Toy Piano, Trap Piano Keys, Organ Drawbars Soft |
-| Pads | Warm Analog Pad, Dark Trap Pad, Choir Aahs, Ethereal Glass Pad, Evolving Spectra, Lo-Fi Tape Pad, Sunset Strings Pad, Cloud Pad, Retro Synth Pad, Ambient Wash |
-| Leads | G-Funk Whistle, Trap Lead Saw, Square Lead, Sync Screamer, Breathy Flute, Vocal Lead, Supersaw Anthem, Chip Lead, Siren Lead, Mellow Sine Lead |
-| Plucks | Trap Pluck, Kalimba, Harp Pluck, Nylon Pluck, Koto Pluck, Pizzicato, Bright Arp Pluck, Chord Stab |
-| Bells & Mallets | Trap Bell, Glockenspiel, Dark Bell, Drill Bell, Music Box, Celesta, Marimba, Vibraphone |
-| Strings & Brass | Drill Strings, Cinematic Strings, Brass Stab, Horn Section, Choir Stab, Orchestra Hit |
-| Lo-Fi | Tape Keys, Late Night Keys, Lo-Fi Guitar Pluck, Cassette Pad, Vinyl Bell, Bitcrushed Lead, Warm Sine Chords |
-| FX & Atmos | Vinyl Atmosphere, Riser, Laser Zap, Dark Drone, Siren FX, Tape Stop Drop, Space Echo Blip |
+| 808 & Bass (29) | 808 Boom, 808 Hard Trap, 808 Mafia Slide, 808 Punchy Short, 808 Long Rumble, 808 Growl, 808 Distorted Square, Drill Glide 808, Pure Sub, Reese Bass, Wobble Bass, Funk Pluck Bass, Acid Line, Analog Mono Bass, Lo-Fi Upright, Boom Bap Bass, 808 Rage Clipper, 808 Ghost Slide, 808 Knock, 808 Detroit Buzz, 808 Memphis Dust, 808 Tape Saturated, 808 Jersey Bounce, UK Drill Slide, 808 Stutter, Growl Reese, Plucked Synth Bass, Juicy Sine Bass, G-Funk Synth Bass |
+| Keys (18) | Electric Tines, Soul Keys, Dreamy Keys, Dusty Piano, Gospel Organ, Wurly Grit, Funk Clav, Toy Piano, Trap Piano Keys, Organ Drawbars Soft, Tine Dream, Bright Tines, Felt Keys, Grand Keys, Gospel Chords, Dark Trap Keys, Bell Piano, Tremolo Wurly |
+| Pads (18) | Warm Analog Pad, Dark Trap Pad, Choir Aahs, Ethereal Glass Pad, Evolving Spectra, Lo-Fi Tape Pad, Sunset Strings Pad, Cloud Pad, Retro Synth Pad, Ambient Wash, Analog Strings Pad, Night Drive Pad, Shimmer Pad, Vocal Pad, Haunted Pad, Warm Sub Pad, Dreamscape, PWM Pad |
+| Leads (19) | G-Funk Whistle, Trap Lead Saw, Square Lead, Sync Screamer, Breathy Flute, Vocal Lead, Supersaw Anthem, Chip Lead, Siren Lead, Mellow Sine Lead, Rage Lead, Hyper Saw, Detuned Square Lead, Portamento Sine, Nasal Lead, Acid Lead, Airy Flute Lead, Trumpet Lead, Chiptune Arp Lead |
+| Plucks (16) | Trap Pluck, Kalimba, Harp Pluck, Nylon Pluck, Koto Pluck, Pizzicato, Bright Arp Pluck, Chord Stab, Rage Pluck, Bell Pluck, Dark Pluck, Glass Pluck, Synth Harp, Steel Drum, Pizz Short, Mallet Pluck |
+| Bells & Mallets (14) | Trap Bell, Glockenspiel, Dark Bell, Drill Bell, Music Box, Celesta, Marimba, Vibraphone, Crystal Bell, Church Bell, Tubular Bell, Gamelan, Lo-Fi Glock, Horror Music Box |
+| Strings & Brass (12) | Drill Strings, Cinematic Strings, Brass Stab, Horn Section, Choir Stab, Orchestra Hit, Staccato Strings Dark, Legato Violin, Cello Low, Brass Swell, French Horn, Sad Strings |
+| Lo-Fi (14) | Tape Keys, Late Night Keys, Lo-Fi Guitar Pluck, Cassette Pad, Vinyl Bell, Bitcrushed Lead, Warm Sine Chords, Dusty Rhodes, Cassette Choir, Old Radio Lead, Lo-Fi Bass, Warped Pad, Vinyl Keys, Jazz Hop Pluck |
+| FX & Atmos (13) | Vinyl Atmosphere, Riser, Laser Zap, Dark Drone, Siren FX, Tape Stop Drop, Space Echo Blip, Downlifter, Noise Sweep, Alien Talk, Glitch Zap, Wind, Impact Boom |
 
 Presets are level-matched per category with the offline render tool (see below).
+
+## Favourites and updates
+
+- **Favourites**: click the **star** next to the preset name to like the current preset. All liked presets are
+  collected under **Favourites** at the top of the preset menu, in every project and every DAW.
+- **Updates**: the button next to the tabs shows your version. When a new release is out it turns orange
+  (**UPDATE x.y AVAILABLE**). Click it to read what's new, then **Download update**: the installer for your
+  system is saved to your *Downloads* folder, checked against the release's SHA256 checksums, and **Install**
+  starts it (close your DAW first so the plug-in can be replaced). On Linux, **Show file** opens the folder.
+- The plug-in looks for updates at most every 6 hours by asking `api.github.com` for the latest release of this
+  repository; nothing else is sent. Turn it off with **Check for updates automatically** in the update panel.
+  Settings live in `%APPDATA%\Audiosphere` (Windows), `~/Library/Application Support/Audiosphere` (macOS) or
+  `~/.config/Audiosphere` (Linux).
 
 ## Production tips
 
@@ -94,7 +109,7 @@ macOS universal binary: add `-DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"`.
 Add `-DAUDIOSPHERE_COPY_PLUGIN=ON` to copy the plugin into your system plugin folder after building.
 
 On Linux install the JUCE dependencies first:
-`sudo apt install libasound2-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libfreetype6-dev libfontconfig1-dev libgl1-mesa-dev`.
+`sudo apt install libcurl4-openssl-dev libasound2-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libfreetype6-dev libfontconfig1-dev libgl1-mesa-dev`.
 
 ### Preset render tool
 
